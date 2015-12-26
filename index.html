@@ -1,0 +1,557 @@
+<html data-brackets-id='688' lang="en">
+
+<head data-brackets-id='689'>
+  <title data-brackets-id='690'>Farmer Bazzar</title>
+  <meta data-brackets-id='691' charset="utf-8">
+  <meta data-brackets-id='692' name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta http-equiv=”Content-Type” content=”text/html; charset=utf-8″>
+  <link data-brackets-id='693' rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script data-brackets-id='694' src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script data-brackets-id='695' src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+
+
+<style type="text/css">
+#map{
+  background-color: ;
+  
+}
+ #map-canvas {
+        height: 200px;
+        width:400px;
+        margin: 0px;
+        padding: 0px;
+        border: solid 1px black
+      }
+      .controls {
+        margin-top: 16px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      .pac-container {
+        font-family: Roboto;
+      }
+
+      #type-selector {
+        color: #fff;
+        background-color: #4d90fe;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #type-selector label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+</style>
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+
+    <script>
+function initialize() {
+  var mapOptions = {
+    center: new google.maps.LatLng(23.6849, 90.3563),
+    zoom:10
+  };
+  var map = new google.maps.Map(document.getElementById('map-canvas'),
+    mapOptions);
+
+  var input = /** @type {HTMLInputElement} */(
+      document.getElementById('pac-input'));
+
+  var types = document.getElementById('type-selector');
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
+
+  var autocomplete = new google.maps.places.Autocomplete(input);
+  autocomplete.bindTo('bounds', map);
+
+  var infowindow = new google.maps.InfoWindow();
+  var marker = new google.maps.Marker({
+    map: map,
+    anchorPoint: new google.maps.Point(0, -29)
+  });
+
+  google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    infowindow.close();
+    marker.setVisible(false);
+    var place = autocomplete.getPlace();
+    if (!place.geometry) {
+      window.alert("Autocomplete's returned place contains no geometry");
+      return;
+    }
+
+    // If the place has a geometry, then present it on a map.
+    if (place.geometry.viewport) {
+      map.fitBounds(place.geometry.viewport);
+    } else {
+      map.setCenter(place.geometry.location);
+      map.setZoom(17);  // Why 17? Because it looks good.
+    }
+    marker.setIcon(/** @type {google.maps.Icon} */({
+      url: place.icon,
+      size: new google.maps.Size(71, 71),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(17, 34),
+      scaledSize: new google.maps.Size(35, 35)
+    }));
+    marker.setPosition(place.geometry.location);
+    marker.setVisible(true);
+
+    var address = '';
+    if (place.address_components) {
+      address = [
+        (place.address_components[0] && place.address_components[0].short_name || ''),
+        (place.address_components[1] && place.address_components[1].short_name || ''),
+        (place.address_components[2] && place.address_components[2].short_name || '')
+      ].join(' ');
+    }
+
+    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+    infowindow.open(map, marker);
+  });
+
+  // Sets a listener on a radio button to change the filter type on Places
+  // Autocomplete.
+  function setupClickListener(id, types) {
+    var radioButton = document.getElementById(id);
+    google.maps.event.addDomListener(radioButton, 'click', function() {
+      autocomplete.setTypes(types);
+    });
+  }
+
+  setupClickListener('changetype-all', []);
+  setupClickListener('changetype-address', ['address']);
+  setupClickListener('changetype-establishment', ['establishment']);
+  setupClickListener('changetype-geocode', ['geocode']);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+
+
+
+
+
+
+<body data-brackets-id='696' style="">
+
+
+<div class="navbar navbar-transparent">
+  <div class="navbar-brand">Farmer Bazzar</div>
+    <div class="container-fluid">
+<!--    <div class="navbar-header">
+      <a class="brand" href="index.html"> <img src="images/header.jpg" width = "100" height = "100"></a>
+    </div>-->
+
+    <div class="collapse navbar-collapse" id="myNavbar">
+        <div class="nav navbar-nav navbar-right">
+            <br>
+            <button data-brackets-id='699' type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#uploadform"><span class="glyphicon glyphicon-upload"></span>   তথ্য দিন </button>&nbsp
+                 <button data-brackets-id='699' type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#signupform"><span class="glyphicon glyphicon-registration-mark"></span>   রেজিষ্ট্রেশন করুন </button>&nbsp
+        <button data-brackets-id='699' type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#loginform"><span class="glyphicon glyphicon-log-in"></span>  লগ ইন</button>
+    <br><br>  </div>
+    
+      </div>
+        </di>
+    
+    </div>
+
+<div class="container" >
+    <div class=row>
+        <div class="col-lg-6">
+        <div class="text-above">
+             <h2><b>ফসল শ্রেণী</b></h2>
+        </div>
+        </div>
+        <div class="col-lg-6">
+         <form class="form" role="search" >
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search Course Information" name="srch-term" id="srch-term">
+            <div class="input-group-btn">
+                <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span> অনুসন্ধান</button>
+            </div>
+        </div>
+        </form>
+        </div>
+        </div>
+    </div>
+   
+ <div class="container">
+  <div class="row">
+    <div class="col-xs-2" >
+      <div class="row">
+          <div class="row"><span class="pull-left"><b>ধান</b></span></div>
+          <div class="row">
+              <a class=""> আউশ</a><br>
+              <a class="pull-left"> আমন</a><br>
+              <a class="pull-left"> বোরো</a></div>
+          
+          <div class="row"><a class="pull-left" style="color:black"><b>গম</b></a></div>
+          <div class="row"><a class="pull-left" style="color:black"><b>ভুট্টা</a></div>
+          <div class="row"><a class="pull-left" style="color:black"><b>তৈলবীজ</a></div>
+          <div class="row"><a class="pull-left" style="color:black"><b>আলু</a></div>
+          <div class="row"><a class="pull-left" style="color:black"><b>উদ্দিজ্জ</a></div>
+          <div class="row"><a class="pull-left" style="color:black"><b>আখ</a></div>
+          <div class="row"><a class="pull-left" style="color:black"><b>পাট</a></div>
+          <div class="row"><a class="pull-left" style="color:black"><b>চা</a></div>
+                 
+         
+    
+        </div>
+      </div>
+
+
+
+         <?php
+error_reporting(E_ERROR);
+
+ $con=mysql_connect("localhost","root", "");
+  mysql_select_db("mydb",$con);
+
+ mysql_query('SET CHARACTER SET utf8');
+mysql_query("SET SESSION collation_connection ='utf8_general_ci'");
+
+ $query3="SELECT  productpricerangeUserProfile,productexpiredateUserProfile,productnameUserProfile FROM  userprofile ";
+
+ $result=mysql_query($query3);
+ while($row3=mysql_fetch_assoc($result)){
+      $price= $row3['productpricerangeUserProfile'];
+      $xdate= $row3['productexpiredateUserProfile'];
+      $name= $row3 ['productnameUserProfile'];
+      echo $name;
+      echo $xdate;
+      echo $price;
+
+        
+     
+
+  }
+
+
+
+
+?>
+
+ <div class="col-xs-6" id="map" style="border-left: 1px dashed #e0e0e0;">
+            
+    
+
+            <div class="row">
+                <div class="col-xs-4"><img src="image/rice.jpg"></div>
+                <div class="col-xs-8"><h4>Product name: আউশ </h4><h4>Price range: 12 </h4><h4>Expire Date: 12-12-2015</h4>
+
+                </div>
+            </div><br><br>
+
+
+            <div class="row">
+                <div class="col-xs-4"><img src="image/wheat.jpg"></div>
+                <div class="col-xs-8"><h4>Product name: চা </h4><h4>Price range: 50 </h4><h4>Expire Date:11-12-2015 </h4>
+
+                </div>
+            </div><br><br>
+            <div class="row">
+                <div class="col-xs-4"><img src="image/maize.jpg"></div>
+                <div class="col-xs-8"><h4>Product name:ডাল </h4><h4>Price range: 23 </h4><h4>Expire Date:22-12-2015 </h4>
+
+                </div>
+            </div>
+        </div>
+
+ <div class="col-xs-4" style="">
+
+
+<input id="pac-input" class="controls" type="text"
+        placeholder="Enter a location">
+
+   <center>
+    <div id="map-canvas"></div>
+</center>
+
+
+<div class = "row" style="margin-top:20px">
+ <center>
+<form class="form-inline">
+ 
+  <select class="form-control" style="width:100px">
+  <option> জেলা নির্বাচন</option>
+  <option>বরগুনা</option>
+  <option>ভোলা</option>
+  <option>ঝালকাঠি</option>
+  <option>পিরোজপুর</option>
+  </select>
+
+  <select class="form-control" style="width:100px">
+  <option>শস্য নির্বাচন</option>
+  <option>আউশ</option>
+  <option>আমন</option>
+  <option>বোরো</option>
+  <option>গম </option>
+    <option>শস্য নির্বাচন</option>
+  <option>ভুট্টা</option>
+  <option>উদ্দিজ্জ</option>
+  <option>আখ</option>
+ 
+  </select>
+
+  <button class="btn btn-submit" type="submit"><span class="glyphicon glyphicon-search"></span> অনুসন্ধান</button>
+
+</form>
+  </center>
+</div>
+
+
+
+  </div>
+
+
+
+  </div>
+        
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div data-brackets-id='697' class="container" >
+ <!--- Sign Up Modal-->
+ 
+  <!-- Modal -->
+  <div data-brackets-id='700' class="modal fade" id="signupform" role="form">
+    <div data-brackets-id='701' class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div data-brackets-id='702' class="modal-content">
+        <div data-brackets-id='703' class="modal-header">
+                    <button data-brackets-id='704' type="button" class="close" data-dismiss="modal" aria-label=""><span data-brackets-id='705'>&times;</span></button>
+                <h4 data-brackets-id='706' class="modal-title"><span class="glyphicon glyphicon-registration-mark"></span>  রেজিষ্ট্রেশন করুন
+</h4>
+                </div>                <div data-brackets-id='707' class="modal-body">
+                    <form action="upload2.php" data-brackets-id='708' class="form-horizontal" method="post" enctype="multipart/form-data">
+                        
+                        <div data-brackets-id='709' class="form-group">
+                        &nbsp &nbsp &nbsp<span class="glyphicon glyphicon-user"></span>&nbsp<label data-brackets-id='710' class="col-mid-4 col-mid-offset-1">নাম
+</label><br>
+                            <div data-brackets-id='711' class="col-md-5"><input data-brackets-id='712' type="text" class="form-control input-sm" name="name">
+      
+    </span>
+                            </div>
+                            
+                        </div>
+                        
+                        <div data-brackets-id='713' class="form-group">
+                        &nbsp &nbsp&nbsp<span class="glyphicon glyphicon-home"></span>&nbsp<label data-brackets-id='714' class="col-mid-4 col-mid-offset-1">ঠিকানা
+</label><br>
+                            <div data-brackets-id='715' class="col-md-5"><input data-brackets-id='716' type="text" class="form-control input-sm" name="address">
+                            </div>
+                        </div>
+                        
+                        <div data-brackets-id='717' class="form-group">
+                        &nbsp &nbsp&nbsp<span class="glyphicon glyphicon-road"></span>&nbsp<label data-brackets-id='718' class="col-mid-4 col-mid-offset-1">জেলা</label><br>
+                            <div data-brackets-id='719' class="col-md-5"><input data-brackets-id='720' type="text" class="form-control input-sm" name="district">
+                            </div>
+                        </div>
+                        
+                                                <div data-brackets-id='717' class="form-group">
+                        &nbsp &nbsp&nbsp<span class="glyphicon glyphicon-phone"></span>&nbsp<label data-brackets-id='718' class="col-mid-4 col-mid-offset-1">ফোন</label><br>
+                            <div data-brackets-id='719' class="col-md-5"><input data-brackets-id='720' type="text" class="form-control input-sm" name="phone">
+                            </div>
+                        </div>
+                        
+                        
+                                                <div data-brackets-id='717' class="form-group">
+                     &nbsp &nbsp&nbsp<span class="glyphicon glyphicon-picture"></span>&nbsp<label data-brackets-id='718' class="col-mid-4 col-mid-offset-1">ছবি দিন</label><br>
+                            <div data-brackets-id='719' class="col-md-5"><input data-brackets-id='720' type="file" class="" name="fileToUpload">
+                            </div>
+                        </div>
+                        
+                                                <div data-brackets-id='721' class="form-group">
+                     &nbsp &nbsp&nbsp<span class="glyphicon glyphicon-lock"></span>&nbsp<label data-brackets-id='722' class="col-mid-4 col-mid-offset-1">পাসওয়ার্ড
+</label><br>
+                            <div data-brackets-id='723' class="col-md-5"><input data-brackets-id='724' type="password" class="form-control input-sm" name="password">
+                            </div>
+                        </div>
+                        
+                                                      
+                        <div data-brackets-id='729' class="form-group">
+                            <div data-brackets-id='730' class="col-md-2 col-md-offset-3">
+                                <input data-brackets-id='731' type="submit" class="btn btn-success" value="সাবমিট" name="submit">
+                            </div>
+                        </div>
+                        
+                        
+                    </form>
+                </div>
+        <div data-brackets-id='732' class="modal-footer"></div>
+      </div>
+      
+    </div>
+  </div>
+
+
+
+<!--- Log In Modal-->
+  <!-- Modal -->
+  <div data-brackets-id='700' class="modal fade" id="loginform" role="form">
+    <div data-brackets-id='701' class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div data-brackets-id='702' class="modal-content">
+        <div data-brackets-id='703' class="modal-header">
+                    <button data-brackets-id='704' type="button" class="close" data-dismiss="modal" aria-label=""><span data-brackets-id='705'>&times;</span></button>
+                <h4 data-brackets-id='706' class="modal-title"><span class="glyphicon glyphicon-log-in"></span>  লগ ইন
+</h4>
+                </div>                <div data-brackets-id='707' class="modal-body">
+                    <form action="userlogin.php" data-brackets-id='708' class="form-horizontal" method="post">
+                        
+                        <div data-brackets-id='717' class="form-group">
+                        &nbsp &nbsp&nbsp<span class="glyphicon glyphicon-phone"></span>&nbsp<label data-brackets-id='718' class="col-mid-4 col-mid-offset-1">ফোন
+</label><br>    <div data-brackets-id='719' class="col-md-5"><input data-brackets-id='720' type="text" class="form-control input-sm" name="phone">
+                            </div>
+                        </div>
+                        
+                        <div data-brackets-id='721' class="form-group">
+                     &nbsp &nbsp&nbsp<span class="glyphicon glyphicon-lock"></span>&nbsp<label data-brackets-id='722' class="col-mid-4 col-mid-offset-1">পাসওয়ার্ড</label><br>
+                            <div data-brackets-id='723' class="col-md-5"><input data-brackets-id='724' type="password" class="form-control input-sm" name="password">
+                            </div>
+                        </div>
+                        
+                                                      
+                        <div data-brackets-id='729' class="form-group">
+                            <div data-brackets-id='730' class="col-md-2 col-md-offset-3">
+                                <input data-brackets-id='731' type="submit" class="btn btn-success" value="লগ ইন
+" name="login">
+                            </div>
+                        </div>
+                        
+                        
+                    </form>
+                </div>
+        <div data-brackets-id='732' class="modal-footer"></div>
+      </div>
+      
+    </div>
+  </div>
+
+
+ <!--- Upload Modal-->
+ 
+  <!-- Modal -->
+  <div data-brackets-id='700' class="modal fade" id="uploadform" role="form">
+    <div data-brackets-id='701' class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div data-brackets-id='702' class="modal-content">
+        <div data-brackets-id='703' class="modal-header">
+                    <button data-brackets-id='704' type="button" class="close" data-dismiss="modal" aria-label=""><span data-brackets-id='705'>&times;</span></button>
+                <h4 data-brackets-id='706' class="modal-title"><span class="glyphicon glyphicon-upload"></span>  Upload
+</h4>
+                </div>                <div data-brackets-id='707' class="modal-body">
+                    <form action="userprofile.php" data-brackets-id='708' class="form-horizontal" method="post" enctype="multipart/form-data">
+                        
+                        <div data-brackets-id='709' class="form-group">
+                        &nbsp &nbsp &nbsp<span class="glyphicon glyphicon-user"></span>&nbsp<label data-brackets-id='710' class="col-mid-4 col-mid-offset-1">Product Name
+</label><br>
+                            <div data-brackets-id='711' class="col-md-5"><select class="form-control" name="pname"style="width:200px">
+ <option>শস্য নির্বাচন</option>
+  <option>আউশ</option>
+  <option>আমন</option>
+  <option>বোরো</option>
+  <option>গম/option>
+    <option>শস্য নির্বাচন</option>
+  <option>ভুট্টা</option>
+  <option>উদ্দিজ্জ</option>
+  <option>আখ</option>
+
+                        <div data-brackets-id='717' class="form-group">
+                     &nbsp &nbsp&nbsp<span class="glyphicon glyphicon-picture"></span>&nbsp<label data-brackets-id='718' class="col-mid-4 col-mid-offset-1">Product Image</label><br>
+                            <div data-brackets-id='719' class="col-md-5"><input data-brackets-id='720' type="file" class="" name="fileToUpload">
+                            </div>
+                        </div>
+                        <div data-brackets-id='709' class="form-group">
+                        &nbsp &nbsp &nbsp<span class="glyphicon glyphicon-user"></span>&nbsp<label data-brackets-id='710' class="col-mid-4 col-mid-offset-1">Price Range
+</label><br>
+                            <div data-brackets-id='711' class="col-md-5"><input data-brackets-id='712' type="text" class="form-control input-sm" name="name">
+      
+    </span></div></div>
+
+    <div data-brackets-id='709' class="form-group">
+                        &nbsp &nbsp &nbsp<span class="glyphicon glyphicon-user"></span>&nbsp<label data-brackets-id='710' class="col-mid-4 col-mid-offset-1">Expire Date
+</label><br>
+                            <div data-brackets-id='711' class="col-md-5"><input data-brackets-id='712' type="text" class="form-control input-sm" name="edate">
+      
+    </span></div></div>
+                        
+                        
+                                                      
+                        <div data-brackets-id='729' class="form-group">
+                            <div data-brackets-id='730' class="col-md-2 col-md-offset-3">
+                                <input data-brackets-id='731' type="submit" class="btn btn-success" value="সাবমিট" name="submit">
+                            </div>
+                        </div>
+                        
+                        
+                    </form>
+                </div>
+        <div data-brackets-id='732' class="modal-footer"></div>
+      </div>
+      
+    </div>
+  </div>
+
+
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
+
